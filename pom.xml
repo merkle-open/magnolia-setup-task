@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.merkle.oss.magnolia</groupId>
+    <artifactId>magnolia-setup-task</artifactId>
+    <packaging>pom</packaging>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <name>${project.artifactId}</name>
+    <url>https://github.com/merkle-open/magnolia-setup-task</url>
+    <description>Setup task to help bootstrap magnolia</description>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Merkle Magnolia</name>
+            <email>magnolia@merkle.com</email>
+            <organization>Merkle DACH</organization>
+            <organizationUrl>https://merkleinc.ch</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/merkle-open/magnolia-setup-task</url>
+        <connection>scm:git:git@github.com:merkle-open/magnolia-setup-task.git</connection>
+        <developerConnection>scm:git:git@github.com:merkle-open/magnolia-setup-task.git</developerConnection>
+    </scm>
+
+    <modules>
+        <module>common-task</module>
+        <module>core</module>
+    </modules>
+
+    <properties>
+        <!-- check for new versions:  mvn versions:display-property-updates -->
+        <magnolia.version>6.3.0</magnolia.version>
+        <jsr305.nullable.version>3.0.2</jsr305.nullable.version>
+        <namics.oss.powernode.version>2.1.1</namics.oss.powernode.version>
+
+        <!-- Maven Plugins -->
+        <mvn.compiler.plugin.version>3.11.0</mvn.compiler.plugin.version>
+        <mvn.source.plugin.version>3.3.0</mvn.source.plugin.version>
+        <mvn.javadoc.version>3.8.0</mvn.javadoc.version>
+        <mvn.gpg.plugin.version>3.2.5</mvn.gpg.plugin.version>
+        <mvn.sonatype.publishing.plugin.version>0.5.0</mvn.sonatype.publishing.plugin.version>
+        <mvn.surefire.plugin.version>3.5.0</mvn.surefire.plugin.version>
+
+        <!--Test dependency versions-->
+        <junit.version>5.11.0</junit.version>
+        <mockito.version>5.13.0</mockito.version>
+
+        <javaVersion>17</javaVersion>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>info.magnolia.bundle</groupId>
+                <artifactId>magnolia-bundle-parent</artifactId>
+                <version>${magnolia.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.merkle.oss.magnolia</groupId>
+                <artifactId>magnolia-setup-task-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.namics.oss.magnolia</groupId>
+                <artifactId>magnolia-powernode</artifactId>
+                <version>${namics.oss.powernode.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>${jsr305.nullable.version}</version>
+            </dependency>
+
+            <!-- TESTING DEPENDENCIES -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${mvn.compiler.plugin.version}</version>
+                <configuration>
+                    <release>${javaVersion}</release>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${mvn.source.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${mvn.javadoc.version}</version>
+                <configuration>
+                    <failOnError>false</failOnError>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${mvn.surefire.plugin.version}</version>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <!-- Magnolia -->
+        <repository>
+            <id>magnolia.public.group</id>
+            <url>https://nexus.magnolia-cms.com/content/groups/public</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>magnolia.enterprise.group</id>
+            <url>https://nexus.magnolia-cms.com/content/groups/enterprise</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <!-- central portal doesn't support SNAPSHOT versions: https://central.sonatype.org/faq/snapshot-releases -->
+        <repository>
+            <id>central</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <profiles>
+        <profile>
+            <id>deploy</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${mvn.gpg.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <configuration>
+                                    <!-- Prevent `gpg` from using pinentry programs -->
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>${mvn.sonatype.publishing.plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                            <waitUntil>published</waitUntil>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
