@@ -62,6 +62,10 @@ public class UserManagerUtil {
 		userManager.get().setProperty(user, MgnlUserManager.PROPERTY_ENABLED, "true");
 	}
 
+	public void removeRole(final User user, final Role role) {
+		userManager.get().removeRole(user, role.getName());
+	}
+
 	public static class Factory {
         private final SecuritySupport securitySupport;
 
