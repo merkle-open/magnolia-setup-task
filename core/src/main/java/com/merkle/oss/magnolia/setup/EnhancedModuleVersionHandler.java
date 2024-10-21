@@ -65,8 +65,8 @@ public abstract class EnhancedModuleVersionHandler extends DefaultModuleVersionH
     }
 
     private Delta getInstallAndUpdateTasksDelta(final InstallContext installContext, final Version forVersion, @Nullable final Version versionFrom) {
-        final boolean isUpdate = forVersion.isStrictlyAfter(versionFrom);
         final boolean isInstall = versionFrom == null;
+        final boolean isUpdate = !isInstall && forVersion.isStrictlyAfter(versionFrom);
 
         return DeltaBuilder.install(forVersion, "setup-task install and update").addTasks(Stream.of(
                 isInstall ? getInstallTasks(installContext, forVersion) : Stream.<Task>empty(),
