@@ -70,8 +70,8 @@ public abstract class EnhancedModuleVersionHandler extends DefaultModuleVersionH
 
         return DeltaBuilder.install(forVersion, "setup-task install and update").addTasks(Stream.of(
                 isInstall ? getInstallTasks(installContext, forVersion) : Stream.<Task>empty(),
-                isUpdate ? getInstallAndUpdateTasks(installContext, forVersion, null) : Stream.<Task>empty(),
-                (isInstall || isUpdate)? getUpdateTasks(installContext, forVersion, versionFrom) : Stream.<Task>empty()
+                isUpdate ? getUpdateTasks(installContext, forVersion, versionFrom) : Stream.<Task>empty(),
+                (isInstall || isUpdate)? getInstallAndUpdateTasks(installContext, forVersion, versionFrom) : Stream.<Task>empty()
         ).flatMap(Function.identity()).sorted(new DepdendsOnComparator()).toList());
     }
 
