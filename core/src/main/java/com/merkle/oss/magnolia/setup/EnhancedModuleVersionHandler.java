@@ -90,24 +90,24 @@ public abstract class EnhancedModuleVersionHandler extends DefaultModuleVersionH
     }
 
     protected Stream<Task> getInstallTasks(final InstallContext installContext, final Version forVersion) {
-        return filter(installTasks, forVersion, null);
+        return filter(installTasks, installContext, forVersion, null);
     }
 
     protected Stream<Task> getInstallAndUpdateTasks(final InstallContext installContext, final Version forVersion, @Nullable final Version fromVersion) {
-        return filter(installAndUpdateTasks, forVersion, fromVersion);
+        return filter(installAndUpdateTasks, installContext, forVersion, fromVersion);
     }
 
     protected Stream<Task> getUpdateTasks(final InstallContext installContext, final Version forVersion, @Nullable final Version fromVersion) {
-        return filter(updateTasks, forVersion, fromVersion);
+        return filter(updateTasks, installContext, forVersion, fromVersion);
     }
 
     protected Stream<Task> getModuleStartupTasks(final InstallContext installContext, final Version forVersion, @Nullable final Version fromVersion) {
-        return filter(moduleStartupTasks, forVersion, fromVersion);
+        return filter(moduleStartupTasks, installContext, forVersion, fromVersion);
     }
 
     protected Stream<Task> getSnapshotStartupTasks(final InstallContext installContext, final Version forVersion, @Nullable final Version fromVersion) {
         return Stream.of(
-                filter(snapshotStartupTasks, forVersion, fromVersion),
+                filter(snapshotStartupTasks, installContext, forVersion, fromVersion),
                 // execute all general install and update tasks on snapshot
                 getInstallAndUpdateTasks(installContext, forVersion, fromVersion),
                 getUpdateTasks(installContext, forVersion, fromVersion)
@@ -115,13 +115,13 @@ public abstract class EnhancedModuleVersionHandler extends DefaultModuleVersionH
     }
 
     protected Stream<Task> getLocalDevelopmentStartupTasks(final InstallContext installContext, final Version forVersion, @Nullable final Version fromVersion) {
-        return filter(localDevelopmentStartupTasks, forVersion, fromVersion);
+        return filter(localDevelopmentStartupTasks, installContext, forVersion, fromVersion);
     }
 
-    protected Stream<Task> filter(final Collection<? extends VersionAwareTask> tasks, final Version forVersion, @Nullable final Version fromVersion) {
+    protected Stream<Task> filter(final Collection<? extends VersionAwareTask> tasks, final InstallContext installContext, final Version forVersion, @Nullable final Version fromVersion) {
         return tasks
                 .stream()
-                .filter(task -> task.test(forVersion, fromVersion))
+                .filter(task -> task.test(installContext, forVersion, fromVersion))
                 .map(task -> task);
     }
 }
