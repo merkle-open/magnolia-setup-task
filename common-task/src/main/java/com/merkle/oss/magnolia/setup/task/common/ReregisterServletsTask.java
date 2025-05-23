@@ -8,10 +8,15 @@ import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.ServletDefinition;
 
+import java.util.Optional;
+
 import javax.inject.Inject;
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import com.machinezoo.noexception.Exceptions;
 import com.merkle.oss.magnolia.setup.task.type.InstallAndUpdateTask;
 
 /**
@@ -28,7 +33,7 @@ public class ReregisterServletsTask extends ArrayDelegateTask implements Install
 	}
 
 	@Override
-	public void execute(InstallContext installContext) throws TaskExecutionException {
+	public void execute(final InstallContext installContext) throws TaskExecutionException {
 		final ModuleDefinition moduleDefinition = installContext.getCurrentModuleDefinition();
 		for (ServletDefinition servletDefinition : moduleDefinition.getServlets()) {
 			addTask(new ReregisterServletTask(servletDefinition, nodeNameHelper));
@@ -43,17 +48,20 @@ public class ReregisterServletsTask extends ArrayDelegateTask implements Install
 
 		@Override
 		public void execute(final InstallContext installContext) throws TaskExecutionException {
-			if(!isRegistered(installContext)) {
+			try {
+				getServletNode(installContext).ifPresent(servletNode -> Exceptions.wrap().run(servletNode::remove));
 				super.execute(installContext);
+			} catch (Exception e) {
+				throw new TaskExecutionException("Failed to reregister servlet "+getServletDefinition().getName(), e);
 			}
 		}
 
-		private boolean isRegistered(final InstallContext installContext) throws TaskExecutionException {
+		private Optional<Node> getServletNode(final InstallContext installContext) throws RepositoryException {
 			try {
 				final Session session = installContext.getConfigJCRSession();
-				return session.getRootNode().hasNode(DEFAULT_SERVLET_FILTER_PATH + "/" + getServletDefinition().getName());
-			} catch (RepositoryException e) {
-				throw new TaskExecutionException("Failed to reregister servlet "+getServletDefinition().getName(), e);
+				return Optional.of(session.getRootNode().getNode(DEFAULT_SERVLET_FILTER_PATH + "/" + getServletDefinition().getName()));
+			} catch (PathNotFoundException e) {
+				return Optional.empty();
 			}
 		}
 	}
