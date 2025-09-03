@@ -11,7 +11,7 @@ import info.magnolia.module.InstallContext;
 import info.magnolia.repository.RepositoryConstants;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class SetEmptyDefaultExtensionTask extends AbstractPathNodeBuilderTask implements InstallAndUpdateTask {
 	private static final String TASK_NAME = "Set default Extension";

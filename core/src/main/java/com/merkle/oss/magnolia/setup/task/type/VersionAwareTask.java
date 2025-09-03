@@ -6,7 +6,7 @@ import info.magnolia.module.model.Version;
 
 import java.util.Optional;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public interface VersionAwareTask extends Task {
 
