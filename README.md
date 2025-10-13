@@ -110,3 +110,10 @@ public class MyModuleVersionHandler extends EnhancedModuleVersionHandler {
     }
 }
 ```
+
+## Force manual execution of update tasks
+To force the execution of update tasks even if the version has not been increased set the following property:
+
+```properties
+com.merkle.oss.magnolia.setup.forceExecuteManualUpdateTasks=true
+```

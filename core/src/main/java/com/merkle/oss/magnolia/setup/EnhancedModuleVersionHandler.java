@@ -1,5 +1,6 @@
 package com.merkle.oss.magnolia.setup;
 
+import info.magnolia.init.MagnoliaConfigurationProperties;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.Delta;
@@ -7,6 +8,7 @@ import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.model.Version;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -14,6 +16,9 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.merkle.oss.magnolia.setup.task.type.DepdendsOnComparator;
 import com.merkle.oss.magnolia.setup.task.type.InstallAndUpdateTask;
@@ -25,12 +30,15 @@ import com.merkle.oss.magnolia.setup.task.type.UpdateTask;
 import com.merkle.oss.magnolia.setup.task.type.VersionAwareTask;
 
 public abstract class EnhancedModuleVersionHandler extends DefaultModuleVersionHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private final Set<InstallTask> installTasks;
     private final Set<UpdateTask> updateTasks;
     private final Set<InstallAndUpdateTask> installAndUpdateTasks;
     private final Set<ModuleStartupTask> moduleStartupTasks;
     private final Set<SnapshotStartupTask> snapshotStartupTasks;
     private final Set<LocalDevelopmentStartupTask> localDevelopmentStartupTasks;
+    private final MagnoliaConfigurationProperties properties;
 
     protected EnhancedModuleVersionHandler(
             final Set<InstallTask> installTasks,
@@ -38,7 +46,8 @@ public abstract class EnhancedModuleVersionHandler extends DefaultModuleVersionH
             final Set<InstallAndUpdateTask> installAndUpdateTasks,
             final Set<ModuleStartupTask> moduleStartupTasks,
             final Set<SnapshotStartupTask> snapshotStartupTasks,
-            final Set<LocalDevelopmentStartupTask> localDevelopmentStartupTasks
+            final Set<LocalDevelopmentStartupTask> localDevelopmentStartupTasks,
+            final MagnoliaConfigurationProperties properties
     ) {
         this.installTasks = installTasks;
         this.updateTasks = updateTasks;
@@ -46,6 +55,7 @@ public abstract class EnhancedModuleVersionHandler extends DefaultModuleVersionH
         this.moduleStartupTasks = moduleStartupTasks;
         this.snapshotStartupTasks = snapshotStartupTasks;
         this.localDevelopmentStartupTasks = localDevelopmentStartupTasks;
+        this.properties = properties;
     }
 
     @Override
@@ -66,7 +76,11 @@ public abstract class EnhancedModuleVersionHandler extends DefaultModuleVersionH
 
     private Delta getInstallAndUpdateTasksDelta(final InstallContext installContext, final Version forVersion, @Nullable final Version versionFrom) {
         final boolean isInstall = versionFrom == null;
-        final boolean isUpdate = !isInstall && forVersion.isStrictlyAfter(versionFrom);
+        final boolean isManuallyForceUpdate = isManuallyForceUpdate();
+        final boolean isUpdate = (!isInstall && forVersion.isStrictlyAfter(versionFrom)) || isManuallyForceUpdate;
+        if(isManuallyForceUpdate) {
+            LOG.warn("manually forcing execution of update tasks!");
+        }
 
         return DeltaBuilder.install(forVersion, "setup-task install and update").addTasks(Stream.of(
                 isInstall ? getInstallTasks(installContext, forVersion) : Stream.<Task>empty(),
@@ -81,6 +95,10 @@ public abstract class EnhancedModuleVersionHandler extends DefaultModuleVersionH
                 isSnapshot(forVersion) ? getSnapshotStartupTasks(installContext, forVersion, versionFrom) : Stream.<Task>empty(),
                 isLocalDevelopmentEnvironment() ? getLocalDevelopmentStartupTasks(installContext, forVersion, versionFrom) : Stream.<Task>empty()
         ).flatMap(Function.identity()).sorted(new DepdendsOnComparator()).toList());
+    }
+
+    protected boolean isManuallyForceUpdate() {
+        return properties.getBooleanProperty("com.merkle.oss.magnolia.setup.forceExecuteManualUpdateTasks");
     }
 
     protected abstract boolean isLocalDevelopmentEnvironment();
