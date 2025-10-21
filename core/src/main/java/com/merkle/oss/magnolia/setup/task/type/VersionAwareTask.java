@@ -14,6 +14,12 @@ public interface VersionAwareTask extends Task {
 		return true;
 	}
 
+    /**
+     * Defines task that will be executed before this one.
+     * <br>
+     * <b>Be aware:</b><br>
+     * JCR queries run on persisted content. Unsaved modifications in the current session are not considered! (e.g. unsaved modifications in earlier executed setup tasks)
+     */
 	default Optional<VersionAwareTask> dependsOn() {
 		return Optional.empty();
 	}

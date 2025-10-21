@@ -38,7 +38,14 @@ public class SomeTask implements InstallAndUpdateTask {
         return true;
     }
 
-    //Optional
+    /*
+     * Defines task that will be executed before this one.
+     * 
+     * Be aware:
+     * JCR queries run on persisted content. Unsaved modifications in the current session are not considered! (e.g. unsaved modifications in earlier executed setup tasks)
+     * 
+     * optional
+     */
     @Override
     public Optional<VersionAwareTask> dependsOn() {
         return Optional.empty();
