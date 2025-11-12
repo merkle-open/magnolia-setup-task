@@ -8,7 +8,7 @@ import info.magnolia.repository.RepositoryConstants;
 
 import java.util.Optional;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import com.merkle.oss.magnolia.powernode.NodeOperationFactory;
 import com.merkle.oss.magnolia.powernode.ValueConverter;

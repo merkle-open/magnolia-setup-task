@@ -15,7 +15,7 @@ import info.magnolia.module.InstallContext;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.repository.RepositoryConstants;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;

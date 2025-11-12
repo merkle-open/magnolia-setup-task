@@ -10,7 +10,7 @@ import info.magnolia.module.model.Version;
 
 import java.util.Optional;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import com.merkle.oss.magnolia.setup.task.type.InstallAndUpdateTask;
 import com.merkle.oss.magnolia.setup.task.type.VersionAwareTask;
@@ -85,7 +85,7 @@ public class CustomGuiceComponentConfigurer extends AbstractGuiceComponentConfig
 ```java
 import java.util.Set;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.inject.Named;
 
 import com.merkle.oss.magnolia.setup.EnhancedModuleVersionHandler;
