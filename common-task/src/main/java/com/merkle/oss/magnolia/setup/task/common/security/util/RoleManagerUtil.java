@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -32,6 +33,13 @@ public class RoleManagerUtil {
 	@Inject
 	public RoleManagerUtil(final SecuritySupport securitySupport) {
 		roleManager = securitySupport::getRoleManager;
+	}
+
+	public Set<Role> getRoles(final String... names) {
+		return Arrays.stream(names)
+				.map(this::getRole)
+				.flatMap(Optional::stream)
+				.collect(Collectors.toSet());
 	}
 
 	public Optional<Role> getRole(final String name) {
