@@ -19,7 +19,7 @@ import com.merkle.oss.magnolia.setup.task.common.security.util.RoleManagerUtil;
 import com.merkle.oss.magnolia.setup.task.common.security.util.UserManagerUtil;
 
 /**
- * Creates a user in the provided realm with username & password loaded from properties using
+ * Creates a user in the provided realm with username &amp; password loaded from properties using
  * <ul>
  *     <li>users.NAME.username</li>
  *     <li>users.NAME.password</li>
