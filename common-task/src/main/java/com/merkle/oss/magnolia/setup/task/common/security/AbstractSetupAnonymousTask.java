@@ -3,6 +3,7 @@ package com.merkle.oss.magnolia.setup.task.common.security;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.Realm;
 import info.magnolia.cms.security.Role;
+import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.UserManager;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AbstractTask;
@@ -25,7 +26,7 @@ public abstract class AbstractSetupAnonymousTask extends AbstractTask {
 	private static final String TASK_DESCRIPTION = "Sets ACLs for anonymous user";
 	private final TemplatingFunctions templatingFunctions;
 	private final RoleManagerUtil.Factory roleManagerUtilFactory;
-	private final UserManagerUtil userManagerUtil;
+	protected final UserManagerUtil userManagerUtil;
 
 	protected AbstractSetupAnonymousTask(
 			final TemplatingFunctions templatingFunctions,
@@ -47,22 +48,22 @@ public abstract class AbstractSetupAnonymousTask extends AbstractTask {
 					Stream.of(role),
 					roleManagerUtil.getRoles(Set.of("categorization-base", "contact-base", "imaging-base", "rest-anonymous", "stories-base")).stream()
 			).collect(Collectors.toSet());
-			configureRole(roleManagerUtil, role);
+			configureRoleInternal(roleManagerUtil, role);
 			userManagerUtil.getOrCreateUserAndSetPassword(
 					new UsernamePasswordCredentials(UserManager.ANONYMOUS_USER, new String(Base64.encodeBase64(UserManager.ANONYMOUS_USER.getBytes()))),
 					Collections.emptySet(),
 					roles
-			);
+			).ifPresent(user -> configureUser(roleManagerUtil, user));
 		} catch (Exception e) {
 			throw new TaskExecutionException("Failed to set anonymous user", e);
 		}
 	}
 
-	private void configureRole(final RoleManagerUtil roleManagerUtil, final Role role) {
+	private void configureRoleInternal(final RoleManagerUtil roleManagerUtil, final Role role) {
 		roleManagerUtil.removeAllWebAccess(role);
 		roleManagerUtil.addWebAccess(role, Permission.NONE, "/.magnolia", "/.magnolia*");
 		roleManagerUtil.addWebAccess(role, Permission.READ, "/VAADIN/*");
-
+		configureRole(roleManagerUtil, role);
 		/*
 		 * On most systems, the rights and permissions of the anonymous role differ between author and public instances:
 		 * allow read access to all on the public instance, while deny the same on the author instance.
@@ -77,4 +78,6 @@ public abstract class AbstractSetupAnonymousTask extends AbstractTask {
 	}
 
 	protected abstract void configureRolePublic(RoleManagerUtil roleManagerUtil, Role role);
+	protected void configureRole(final RoleManagerUtil roleManagerUtil, final Role role) {}
+	protected void configureUser(final RoleManagerUtil roleManagerUtil, final User user){}
 }

@@ -29,8 +29,8 @@ public abstract class AbstractSetupUserTask extends AbstractTask {
     private final MagnoliaConfigurationProperties properties;
     private final RoleManagerUtil.Factory roleManagerUtilFactory;
     private final GroupManagerUtil.Factory groupManagerUtilFactory;
+    protected final UserManagerUtil userManagerUtil;
     private final String name;
-    private final UserManagerUtil userManagerUtil;
 
 	protected AbstractSetupUserTask(
             final MagnoliaConfigurationProperties properties,
@@ -44,8 +44,8 @@ public abstract class AbstractSetupUserTask extends AbstractTask {
         this.properties = properties;
         this.roleManagerUtilFactory = roleManagerUtilFactory;
         this.groupManagerUtilFactory = groupManagerUtilFactory;
-        this.name = name;
         this.userManagerUtil = userManagerUtilFactory.create(realm);
+        this.name = name;
 	}
 
 	@Override

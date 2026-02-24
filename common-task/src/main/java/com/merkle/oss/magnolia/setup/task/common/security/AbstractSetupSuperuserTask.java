@@ -24,7 +24,7 @@ import com.merkle.oss.magnolia.setup.task.common.security.util.UserManagerUtil;
 public abstract class AbstractSetupSuperuserTask extends AbstractTask {
 	private static final String TASK_NAME = "Superuser ACL";
 	private static final String TASK_DESCRIPTION = "Sets ACLs for superuser";
-	private final UserManagerUtil userManagerUtil;
+	protected final UserManagerUtil userManagerUtil;
 	private final RoleManagerUtil.Factory roleManagerUtilFactory;
 	private final GroupManagerUtil.Factory groupManagerUtilFactory;
 	private final MagnoliaConfigurationProperties properties;
