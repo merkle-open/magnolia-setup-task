@@ -28,6 +28,11 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-templating</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>info.magnolia.ui</groupId>
       <artifactId>magnolia-ui-framework</artifactId>
       <scope>provided</scope>
