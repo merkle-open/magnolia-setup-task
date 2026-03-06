@@ -50,9 +50,9 @@ public abstract class AbstractSetupSuperuserTask extends AbstractTask {
 			final Role role = roleManagerUtil.getOrCreateRole("superuser");
 			final Set<Role> roles = Stream.concat(
 					Stream.of(role),
-					roleManagerUtil.getRoles(Set.of("rest-admin")).stream()
+					roles(roleManagerUtil).stream()
 			).collect(Collectors.toSet());
-			final Set<Group> groups = groupManagerUtil.getGroups(Set.of("publishers"));
+			final Set<Group> groups = groups(groupManagerUtil);
 
 			configureRoleInternal(roleManagerUtil, role);
 			getCredentials()
@@ -63,6 +63,13 @@ public abstract class AbstractSetupSuperuserTask extends AbstractTask {
 		} catch (Exception e) {
 			throw new TaskExecutionException("Failed to set superuser ACLs", e);
 		}
+	}
+
+	protected Set<Role> roles(final RoleManagerUtil roleManagerUtil) {
+		return roleManagerUtil.getRoles(Set.of("rest-admin"));
+	}
+	protected Set<Group> groups(final GroupManagerUtil groupManagerUtil) {
+		return groupManagerUtil.getGroups(Set.of("publishers"));
 	}
 
 	private void configureRoleInternal(final RoleManagerUtil roleManagerUtil, final Role role) {
