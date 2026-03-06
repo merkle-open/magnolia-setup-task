@@ -158,7 +158,7 @@ public class BulkMgnlRoleManager extends MgnlRoleManager {
         return sessionProvider.apply(getRepositoryName())
                 .map(powerNodeService::getRootNode)
                 .stream()
-                .flatMap(root -> root.streamChildren(new IsPrimaryNodeType<>(NodeTypes.Role.NAME)))
+                .flatMap(root -> root.streamChildrenRecursive(new IsPrimaryNodeType<>(NodeTypes.Role.NAME)))
                 .filter(roleNode -> names.contains(roleNode.getName()));
     }
     private PowerNode getOrAddAclNode(final PowerNode roleNode, final String workspace) {

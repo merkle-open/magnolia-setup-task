@@ -154,7 +154,7 @@ public class BulkMgnlGroupManager extends MgnlGroupManager {
         return sessionProvider.apply(getRepositoryName())
                 .map(powerNodeService::getRootNode)
                 .stream()
-                .flatMap(root -> root.streamChildren(new IsPrimaryNodeType<>(NodeTypes.Group.NAME)))
+                .flatMap(root -> root.streamChildrenRecursive(new IsPrimaryNodeType<>(NodeTypes.Group.NAME)))
                 .filter(groupNode -> names.contains(groupNode.getName()));
     }
     private void removeProperties(final PowerNode node, final Set<String> values) {
