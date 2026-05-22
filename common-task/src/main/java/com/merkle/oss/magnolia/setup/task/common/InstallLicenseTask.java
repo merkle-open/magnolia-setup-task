@@ -23,9 +23,6 @@ import com.merkle.oss.magnolia.setup.task.type.LocalDevelopmentStartupTask;
  * <p>
  * magnolia.license.owner=
  * magnolia.license.key=
- * <p>
- * - Add to according 'ModuleVersionHandler' in a project
- * - Execute as getInstallAndUpdateTask
  */
 public class InstallLicenseTask extends AbstractPathNodeBuilderTask implements InstallAndUpdateTask {
 	private static final String TASK_NAME = "Install License Task";
