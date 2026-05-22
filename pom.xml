@@ -43,8 +43,8 @@
 
     <properties>
         <!-- check for new versions:  mvn versions:display-property-updates -->
-        <magnolia.version>6.4.2</magnolia.version>
-        <merkle.oss.powernode.version>2.3.2</merkle.oss.powernode.version>
+        <magnolia.version>6.4.6</magnolia.version>
+        <merkle.oss.powernode.version>2.3.3</merkle.oss.powernode.version>
 
         <!-- Maven Plugins -->
         <mvn.compiler.plugin.version>3.15.0</mvn.compiler.plugin.version>
@@ -55,8 +55,8 @@
         <mvn.surefire.plugin.version>3.5.5</mvn.surefire.plugin.version>
 
         <!--Test dependency versions-->
-        <junit.version>6.0.3</junit.version>
-        <mockito.version>5.21.0</mockito.version>
+        <junit.version>6.1.0</junit.version>
+        <mockito.version>5.23.0</mockito.version>
 
         <javaVersion>17</javaVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
