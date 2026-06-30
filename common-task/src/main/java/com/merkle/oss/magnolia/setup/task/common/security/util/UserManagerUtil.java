@@ -31,22 +31,22 @@ public class UserManagerUtil {
 	}
 
 	public Optional<User> getOrCreateUserAndSetPassword(final Credentials credentials, final Set<Group> groups, final Set<Role> roles) {
-		final User user = getOrCreateUserAndSetPassword(credentials.getUserPrincipal().getName(), credentials.getPassword());
+		User user = getOrCreateUserAndSetPassword(credentials.getUserPrincipal().getName(), credentials.getPassword());
 		for (String group : user.getGroups()) {
 			if(groups.stream().map(Group::getName).noneMatch(group::equals)) {
-				userManager.get().removeGroup(user, group);
+				user = userManager.get().removeGroup(user, group);
 			}
 		}
 		for (Group group : groups) {
-			userManager.get().addGroup(user, group.getName());
+			user = userManager.get().addGroup(user, group.getName());
 		}
 		for (String role : user.getRoles()) {
 			if(roles.stream().map(Role::getName).noneMatch(role::equals)) {
-				userManager.get().removeRole(user, role);
+				user = userManager.get().removeRole(user, role);
 			}
 		}
 		for (Role role : roles) {
-			userManager.get().addRole(user, role.getName());
+			user = userManager.get().addRole(user, role.getName());
 		}
 		return Optional.ofNullable(userManager.get().getUser(user.getName()));
 	}
