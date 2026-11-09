@@ -1,6 +1,6 @@
 package com.merkle.oss.magnolia.setup.task.common;
 
-import com.merkle.oss.magnolia.powernode.NodeOperationFactory; 
+import com.merkle.oss.magnolia.powernode.NodeOperationFactory;
 import com.merkle.oss.magnolia.setup.task.nodebuilder.AbstractPathNodeBuilderTask;
 import com.merkle.oss.magnolia.powernode.ValueConverter;
 import info.magnolia.cms.filters.FilterManager;
@@ -55,13 +55,13 @@ public abstract class AbstractInstallFilterTask extends AbstractPathNodeBuilderT
 	}
 
 	@Override
-	protected final NodeOperation[] getNodeOperations(InstallContext ctx) {
+	protected final NodeOperation[] getNodeOperations(final InstallContext ctx) {
 		return new NodeOperation[]{
 				ops.getOrAddNode(filterName).then(
 						append(
 								getFilterNodeOperations(),
 								ops.setProperty("class", filterClass.getName(), ValueConverter::toValue),
-								ops.setProperty("enabled", true, ValueConverter::toValue)
+								ops.setProperty("enabled", isEnabled(), ValueConverter::toValue)
 						)
 				)
 		};
@@ -81,5 +81,9 @@ public abstract class AbstractInstallFilterTask extends AbstractPathNodeBuilderT
 	 */
 	protected NodeOperation[] getFilterNodeOperations() {
 		return new NodeOperation[]{};
+	}
+
+	protected boolean isEnabled() {
+		return true;
 	}
 }
